@@ -1,0 +1,71 @@
+name: Continous Integration
+
+on:
+  push:
+  pull_request:
+    branches:
+      - master
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Install Rokit
+        uses: CompeyDev/setup-rokit@v0.1.2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Install Zune
+        run: |
+          curl -L -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/Scythe-Technology/Zune/actions/artifacts/3331053322/zip -o zune.zip
+          mkdir zune_bin
+          unzip zune.zip -d zune_bin
+          chmod +x zune_bin/zune
+          echo "$GITHUB_WORKSPACE/zune_bin" >> $GITHUB_PATH
+
+      - name: Build
+        run: |
+          zune run scripts/build.luau
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: build
+          path: game.rbxlx
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Install Rokit
+        uses: CompeyDev/setup-rokit@v0.1.2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Lint
+        run: |
+          selene src/
+
+  style:
+    name: Style
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Install Rokit
+        uses: CompeyDev/setup-rokit@v0.1.2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Check Code Style
+        run: |
+          stylua --check --respect-ignores src/

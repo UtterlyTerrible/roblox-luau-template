@@ -1,0 +1,25 @@
+{
+  "name": "roblox-luau-template",
+  "emitLegacyScripts": false,
+  "tree": {
+    "$className": "DataModel",
+    "ServerScriptService": {
+      "$className": "ServerScriptService",
+      "server": {
+        "$path": "out/server"
+      }
+    },
+    "ReplicatedStorage": {
+      "$className": "ReplicatedStorage",
+      "shared": {
+        "$path": "out/shared"
+      },
+      "client": {
+        "$path": "out/client"
+      },
+      "packages": {
+        "$path": "roblox_packages"
+      }
+    }
+  }
+}

@@ -1,0 +1,6 @@
+{
+    "languageMode": "strict",
+    "aliases": {
+        "std": "../luau_packages/zune_std/"
+    }
+}
